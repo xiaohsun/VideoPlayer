@@ -15,56 +15,61 @@ class MockDataProvider {
     lazy var sampleVideos: [Video] = [
         Video(
             id: "1",
-            title: "Basic English Conversation",
-            description: "Learn essential English phrases for everyday conversations",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/4285F4/FFFFFF?text=Basic+English")!,
+            title: "Big Buck Bunny",
+            description: "A delightful 3D animated short film by the Blender Foundation",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!,
             duration: 596.0,
             difficulty: .beginner
         ),
+        
         Video(
             id: "2",
-            title: "Business English Presentation",
-            description: "Professional English skills for workplace presentations",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/34A853/FFFFFF?text=Business+English")!,
-            videoURL: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")!,
-            duration: 1024.0,
-            difficulty: .intermediate
-        ),
-        Video(
-            id: "3",
-            title: "Advanced Grammar Structures",
-            description: "Master complex English grammar patterns",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/EA4335/FFFFFF?text=Advanced+Grammar")!,
+            title: "Elephant Dream",
+            description: "World's first open movie made entirely with open source tools",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")!,
             duration: 653.0,
-            difficulty: .advanced
+            difficulty: .intermediate
         ),
+        
         Video(
-            id: "4",
-            title: "Travel English Essentials",
-            description: "Essential English phrases for traveling abroad",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/FBBC04/FFFFFF?text=Travel+English")!,
+            id: "3",
+            title: "For Bigger Blazes",
+            description: "Short demo video showcasing visual effects",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4")!,
             duration: 15.0,
             difficulty: .beginner
         ),
+        
         Video(
-            id: "5",
-            title: "Academic English Writing",
-            description: "Improve your academic writing skills in English",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=Academic+Writing")!,
+            id: "4",
+            title: "For Bigger Escape",
+            description: "Adventure themed short demo video",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4")!,
             duration: 15.0,
             difficulty: .intermediate
         ),
+        
         Video(
-            id: "6",
-            title: "Pronunciation Masterclass",
-            description: "Perfect your English pronunciation with expert guidance",
-            thumbnailURL: URL(string: "https://via.placeholder.com/300x200/FF5722/FFFFFF?text=Pronunciation")!,
+            id: "5",
+            title: "For Bigger Fun",
+            description: "Colorful and energetic demo video",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4")!,
             duration: 60.0,
+            difficulty: .advanced
+        ),
+        
+        Video(
+            id: "6",
+            title: "Sintel",
+            description: "Fantasy adventure short film by Blender Foundation",
+            thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg")!,
+            videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")!,
+            duration: 888.0,
             difficulty: .advanced
         )
     ]
