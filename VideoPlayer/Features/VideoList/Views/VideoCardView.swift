@@ -9,11 +9,23 @@ import SwiftUI
 
 struct VideoCardView: View {
     let video: Video
+    let showFavoriteButton: Bool
+    @StateObject private var viewModel: VideoCardViewModel
+    
+    init(video: Video, showFavoriteButton: Bool = true, onFavoriteAdded: @escaping () -> Void = {}) {
+        self.video = video
+        self.showFavoriteButton = showFavoriteButton
+        let vm = VideoCardViewModel(video: video)
+        vm.onFavoriteAdded = onFavoriteAdded
+        self._viewModel = StateObject(wrappedValue: vm)
+    }
     
     var body: some View {
         HStack(spacing: 16) {
             thumbnailView
+            
             infoSection
+            
             Spacer()
         }
         .padding(.vertical, 6)
@@ -43,6 +55,7 @@ struct VideoCardView: View {
                     Image(systemName: "play.circle.fill")
                         .font(.title2)
                         .foregroundColor(difficultyColor)
+                    
                     Text(video.difficulty.rawValue)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(difficultyColor)
@@ -55,7 +68,9 @@ struct VideoCardView: View {
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: 6) {
             titleLabel
+            
             descriptionLabel
+            
             metadataRow
         }
     }
@@ -63,11 +78,13 @@ struct VideoCardView: View {
     @MainActor
     @ViewBuilder
     private var titleLabel: some View {
-        Text(video.title)
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.primary)
-            .lineLimit(2)
-            .multilineTextAlignment(.leading)
+        HStack {
+            Text(video.title)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.primary)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+        }
     }
     
     @MainActor
@@ -85,7 +102,14 @@ struct VideoCardView: View {
     private var metadataRow: some View {
         HStack(spacing: 8) {
             durationBadge
+            
             difficultyBadge
+            
+            Spacer()
+            
+            if showFavoriteButton {
+                favoriteButton
+            }
         }
     }
     
@@ -95,6 +119,7 @@ struct VideoCardView: View {
         HStack(spacing: 4) {
             Image(systemName: "clock")
                 .font(.system(size: 12))
+            
             Text(video.duration.shortFormattedTime)
                 .font(.system(size: 12, weight: .medium))
         }
@@ -113,6 +138,21 @@ struct VideoCardView: View {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(difficultyColor.opacity(0.1))
             )
+    }
+    
+    @MainActor
+    @ViewBuilder
+    private var favoriteButton: some View {
+        Button {
+            withAnimation {
+                viewModel.toggleFavorite()
+            }
+        } label: {
+            Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(viewModel.isFavorite ? .red : .gray)
+        }
+        .buttonStyle(.plain)
     }
     
     private var difficultyColor: Color {
