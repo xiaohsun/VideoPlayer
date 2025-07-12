@@ -22,17 +22,12 @@ struct VideoCardView: View {
     @MainActor
     @ViewBuilder
     private var thumbnailView: some View {
-        AsyncImage(url: video.thumbnailURL) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            case .failure(_), .empty:
-                placeholderView
-            @unknown default:
-                placeholderView
-            }
+        CachedAsyncImage(url: video.thumbnailURL) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        } placeholder: {
+            placeholderView
         }
         .frame(width: 140, height: 78)
         .clipShape(RoundedRectangle(cornerRadius: 8))
