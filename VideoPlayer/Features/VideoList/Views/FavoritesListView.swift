@@ -103,7 +103,7 @@ struct FavoritesListView: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.primary)
         }
-        .offset(y: -40)
+        .offset(y: 150)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     

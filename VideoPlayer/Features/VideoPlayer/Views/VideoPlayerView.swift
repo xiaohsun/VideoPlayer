@@ -10,10 +10,9 @@ import AVKit
 
 struct VideoPlayerView: View {
     @StateObject private var viewModel: VideoPlayerViewModel
-    @State private var showControls = true
-    @State private var controlsTimer: Timer?
     @State private var isDragging = false
     @State private var dragValue: Double = 0
+    @State private var showSpeedPicker = false
     @Environment(\.dismiss) private var dismiss
     
     init(video: Video) {
@@ -25,18 +24,17 @@ struct VideoPlayerView: View {
             Color.black
                 .ignoresSafeArea()
             
-            if viewModel.isLoading {
-                loadingView
-            } else if let errorMessage = viewModel.errorMessage {
-                errorView(message: errorMessage)
-            } else {
-                playerView
-            }
+            playerView
         }
         .navigationBarHidden(true)
         .statusBarHidden()
         .onTapGesture {
-            toggleControls()
+            viewModel.toggleControls()
+        }
+        .overlay {
+            if showSpeedPicker {
+                speedPickerOverlay
+            }
         }
     }
     
@@ -44,14 +42,20 @@ struct VideoPlayerView: View {
     @ViewBuilder
     private var playerView: some View {
         ZStack {
-            if let player = viewModel.getPlayer() {
-                VideoPlayer(player: player)
-                    .disabled(true)
-                    .allowsHitTesting(false)
-                    .ignoresSafeArea()
+            if viewModel.isLoading {
+                loadingView
+            } else if let errorMessage = viewModel.errorMessage {
+                errorView(message: errorMessage)
+            } else {
+                if let player = viewModel.getPlayer() {
+                    VideoPlayer(player: player)
+                        .disabled(true)
+                        .allowsHitTesting(false)
+                        .ignoresSafeArea()
+                }
             }
             
-            if showControls {
+            if viewModel.showControls {
                 controlsOverlay
             }
         }
@@ -71,7 +75,9 @@ struct VideoPlayerView: View {
             LinearGradient(
                 colors: [
                     Color.black.opacity(0.6),
+                    
                     Color.clear,
+                    
                     Color.black.opacity(0.6)
                 ],
                 startPoint: .top,
@@ -96,12 +102,24 @@ struct VideoPlayerView: View {
             
             Spacer()
             
+            Button {
+                showSpeedPicker.toggle()
+                viewModel.resetControlsTimer()
+            } label: {
+                Text("\(viewModel.playbackSpeed, specifier: "%.1f")x")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.black.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+        }
+        .overlay {
             Text(viewModel.video.title)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.white)
                 .lineLimit(1)
-            
-            Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -161,45 +179,93 @@ struct VideoPlayerView: View {
     @MainActor
     @ViewBuilder
     private var progressSlider: some View {
-        Slider(
-            value: Binding(
-                get: { isDragging ? dragValue : viewModel.currentTime },
-                set: { value in
-                    dragValue = value
-                }
-            ),
-            in: 0...max(viewModel.duration, 1),
-            onEditingChanged: { editing in
-                isDragging = editing
-                if !editing {
-                    viewModel.jumpLoadTo(time: dragValue)
-                }
-            }
-        ) {
-            Text("Progress")
+        let totoalWidth = UIScreen.main.bounds.width - 32
+        let currentTime = isDragging ? dragValue : viewModel.currentTime
+        let duration = max(viewModel.duration, 1)
+        
+        ZStack(alignment: .leading) {
+            // Background Progress
+            Rectangle()
+                .frame(height: 4)
+                .foregroundColor(.white.opacity(0.3))
+            
+            // Buffering Progress
+            Rectangle()
+                .frame(width: max(0, CGFloat(viewModel.loadedProgress) * totoalWidth), height: 4)
+                .foregroundColor(.white.opacity(0.6))
+            
+            // Playing Progress
+            Rectangle()
+                .frame(width: max(0, CGFloat(currentTime / duration) * totoalWidth), height: 4)
+                .foregroundColor(.white)
         }
-        .accentColor(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 2))
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                    let progress = max(0, min(1, value.location.x / totoalWidth))
+                    dragValue = progress * viewModel.duration
+                    isDragging = true
+                }
+                .onEnded { _ in
+                    viewModel.jumpLoadTo(time: max(0, dragValue))
+                    isDragging = false
+                }
+        )
     }
     
     @MainActor
     @ViewBuilder
     private var playerControls: some View {
-        HStack(spacing: 32) {
-            Spacer()
+        HStack(spacing: 24) {
+            backwardView
             
-            Button {
-                viewModel.togglePlayPause()
-                resetControlsTimer()
-            } label: {
-                Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundColor(.white)
-            }
-            .transaction { transaction in
-                transaction.disablesAnimations = true
-            }
+            playPauseView
             
-            Spacer()
+            forwardView
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    private var backwardView: some View {
+        Button {
+            viewModel.skipBackward()
+            viewModel.resetControlsTimer()
+        } label: {
+            Image(systemName: "gobackward.10")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(.white)
+        }
+    }
+    
+    
+    @MainActor
+    @ViewBuilder
+    private var forwardView: some View {
+        Button {
+            viewModel.skipForward()
+            viewModel.resetControlsTimer()
+        } label: {
+            Image(systemName: "goforward.10")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(.white)
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    private var playPauseView: some View {
+        Button {
+            viewModel.togglePlayPause()
+            viewModel.resetControlsTimer()
+        } label: {
+            Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                .font(.system(size: 28, weight: .medium))
+                .foregroundColor(.white)
+        }
+        .transaction { transaction in
+            transaction.disablesAnimations = true
         }
     }
     
@@ -242,23 +308,54 @@ struct VideoPlayerView: View {
         .padding()
     }
     
-    private func toggleControls() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            showControls.toggle()
-        }
-        
-        if showControls {
-            resetControlsTimer()
-        }
+    @MainActor
+    @ViewBuilder
+    private var speedPickerOverlay: some View {
+        Color.black.opacity(0.4)
+            .ignoresSafeArea()
+            .onTapGesture {
+                showSpeedPicker = false
+            }
+            .overlay(speedPickerView)
     }
     
-    private func resetControlsTimer() {
-        controlsTimer?.invalidate()
-        controlsTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
-            withAnimation(.easeInOut(duration: 0.3)) {
-                showControls = false
+    @MainActor
+    @ViewBuilder
+    private var speedPickerView: some View {
+        VStack(spacing: 0) {
+            ForEach([0.5, 1.0, 1.5, 2.0], id: \.self) { speed in
+                Button {
+                    viewModel.setPlaybackSpeed(Float(speed))
+                    showSpeedPicker = false
+                    viewModel.resetControlsTimer()
+                } label: {
+                    HStack {
+                        Text("\(speed, specifier: "%.1f")x")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                        
+                        if viewModel.playbackSpeed == Float(speed) {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                }
+                
+                if speed != 2.0 {
+                    Divider()
+                        .background(Color.white.opacity(0.3))
+                }
             }
         }
+        .background(Color.black.opacity(0.8))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(width: 120)
+        .position(x: UIScreen.main.bounds.width - 80, y: 180)
     }
 }
 
