@@ -38,7 +38,7 @@ struct VideoListView: View {
            
         }
         .navigationBarHidden(true)
-        .sheet(isPresented: $showingFavorites) {
+        .fullScreenCover(isPresented: $showingFavorites) {
             FavoritesListView()
         }
         .toastView(item: $toast)
@@ -103,12 +103,12 @@ struct VideoListView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(viewModel.videos) { video in
-                    VideoCardView(video: video) {
-                        toast = ToastView.Model(message: "Added !")
+                    NavigationLink(destination: VideoPlayerView(video: video)) {
+                        VideoCardView(video: video) {
+                            toast = ToastView.Model(message: "Added !")
+                        }
                     }
-                    .onTapGesture {
-                        // TODO: Navigate to video player
-                    }
+                    .buttonStyle(.plain)
                     
                     if video.id != viewModel.videos.last?.id {
                         strokeView
