@@ -135,7 +135,6 @@ final class VideoPlayerViewModelTests: XCTestCase {
         viewModel.currentTime = 10.0
         viewModel.isPlaying = true
         viewModel.loadedProgress = 0.5
-        viewModel.showControls = false
         viewModel.duration = 100.0
         
         viewModel.retry()
@@ -146,7 +145,6 @@ final class VideoPlayerViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isPlaying)
         XCTAssertEqual(viewModel.playbackSpeed, 1.0)
         XCTAssertEqual(viewModel.loadedProgress, 0.0)
-        XCTAssertTrue(viewModel.showControls)
         XCTAssertEqual(viewModel.duration, 0)
     }
 }

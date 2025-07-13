@@ -177,7 +177,8 @@ struct VideoPlayerView: View {
     @MainActor
     @ViewBuilder
     private var progressSlider: some View {
-        let totoalWidth = UIScreen.main.bounds.width - 32
+        let horizontalPadding: CGFloat = 32
+        let totalWidth = UIScreen.main.bounds.width - horizontalPadding
         let currentTime = isDragging ? dragValue : viewModel.currentTime
         let duration = max(viewModel.duration, 1)
         
@@ -189,19 +190,19 @@ struct VideoPlayerView: View {
             
             // Buffering Progress
             Rectangle()
-                .frame(width: max(0, CGFloat(viewModel.loadedProgress) * totoalWidth), height: 4)
+                .frame(width: max(0, CGFloat(viewModel.loadedProgress) * totalWidth), height: 4)
                 .foregroundColor(.white.opacity(0.45))
             
             // Playing Progress
             Rectangle()
-                .frame(width: max(0, CGFloat(currentTime / duration) * totoalWidth), height: 4)
+                .frame(width: max(0, CGFloat(currentTime / duration) * totalWidth), height: 4)
                 .foregroundColor(.white)
         }
         .clipShape(RoundedRectangle(cornerRadius: 2))
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
-                    let progress = max(0, min(1, value.location.x / totoalWidth))
+                    let progress = max(0, min(1, value.location.x / totalWidth))
                     dragValue = progress * viewModel.duration
                     isDragging = true
                 }
@@ -320,6 +321,10 @@ struct VideoPlayerView: View {
     @MainActor
     @ViewBuilder
     private var speedPickerView: some View {
+        let pickerWidth: CGFloat = 120
+        let xOffset: CGFloat = 80
+        let yOffset: CGFloat = 180
+        
         VStack(spacing: 0) {
             ForEach(viewModel.speedControlArray, id: \.self) { speed in
                 Button {
@@ -352,8 +357,8 @@ struct VideoPlayerView: View {
         }
         .background(Color.black.opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .frame(width: 120)
-        .position(x: UIScreen.main.bounds.width - 80, y: 180)
+        .frame(width: pickerWidth)
+        .position(x: UIScreen.main.bounds.width - xOffset, y: yOffset)
     }
 }
 

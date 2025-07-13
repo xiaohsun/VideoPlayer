@@ -24,9 +24,12 @@ class VideoListViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.videos = self.mockDataProvider.sampleVideos
-            self.isLoading = false
+        Task {
+            try await Task.sleep(nanoseconds: 500_000_000)
+            await MainActor.run {
+                self.videos = self.mockDataProvider.sampleVideos
+                self.isLoading = false
+            }
         }
     }
     

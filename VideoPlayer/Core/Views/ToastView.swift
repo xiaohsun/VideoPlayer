@@ -39,14 +39,14 @@ struct ToastModifier: ViewModifier {
         content
             .overlay(
                 VStack {
-                     Spacer()
+                    Spacer()
                     
                     if let item = item {
                         ToastView(model: item)
                             .transition(.opacity)
                     }
                 }
-                 .padding(.bottom, 360)
+                .padding(.bottom, 360)
                 .animation(.easeInOut(duration: 0.3), value: item)
             )
             .onChange(of: item) {
