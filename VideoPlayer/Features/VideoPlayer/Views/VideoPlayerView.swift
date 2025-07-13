@@ -2,7 +2,7 @@
 //  VideoPlayerView.swift
 //  VideoPlayer
 //
-//  Created by 徐柏勳 on 7/11/25.
+//  Created by 徐柏勳 on 7/13/25.
 //
 
 import SwiftUI
@@ -128,7 +128,7 @@ struct VideoPlayerView: View {
     @MainActor
     @ViewBuilder
     private var bottomControls: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) {
             progressBar
             
             playerControls
@@ -192,7 +192,7 @@ struct VideoPlayerView: View {
             // Buffering Progress
             Rectangle()
                 .frame(width: max(0, CGFloat(viewModel.loadedProgress) * totoalWidth), height: 4)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(.white.opacity(0.45))
             
             // Playing Progress
             Rectangle()
@@ -323,7 +323,7 @@ struct VideoPlayerView: View {
     @ViewBuilder
     private var speedPickerView: some View {
         VStack(spacing: 0) {
-            ForEach([0.5, 1.0, 1.5, 2.0], id: \.self) { speed in
+            ForEach(viewModel.speedControlArray, id: \.self) { speed in
                 Button {
                     viewModel.setPlaybackSpeed(Float(speed))
                     showSpeedPicker = false

@@ -2,7 +2,7 @@
 //  VideoPlayerViewModel.swift
 //  VideoPlayer
 //
-//  Created by 徐柏勳 on 7/11/25.
+//  Created by 徐柏勳 on 7/13/25.
 //
 
 import Foundation
@@ -20,6 +20,7 @@ class VideoPlayerViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var loadedProgress: Double = 0.0
     @Published var showControls = true
+    @Published var speedControlArray: [Float] = [0.5, 1.0, 1.5, 2.0]
     
     private var player: AVPlayer?
     private var timeObserver: Any?
@@ -126,10 +127,11 @@ class VideoPlayerViewModel: ObservableObject {
     }
     
     func jumpLoadTo(time: TimeInterval) {
+        let clampedTime = max(0, min(time, duration))
         isJumpingLoading = true
-        currentTime = time
+        currentTime = clampedTime
         
-        let cmTime = CMTime(seconds: time, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let cmTime = CMTime(seconds: clampedTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         player?.seek(to: cmTime) { [weak self] completed in
             guard let self else { return }
             Task { @MainActor in

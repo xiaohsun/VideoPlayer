@@ -2,7 +2,7 @@
 //  FavoritesListView.swift
 //  VideoPlayer
 //
-//  Created by 徐柏勳 on 7/11/25.
+//  Created by 徐柏勳 on 7/12/25.
 //
 
 import SwiftUI
