@@ -6,22 +6,22 @@ A SwiftUI-based iOS video player application designed for language learning, fea
 
 ### Core Functionality
 
-- **Video List**:
+- **Video List**:  
   Browse language learning videos with thumbnails and details
-- **Custom Video Player**:
+- **Custom Video Player**:  
   AVFoundation-based player with custom controls
-- **Favorites System**:
+- **Favorites System**:  
   Heart videos to save them for later viewing
 
 ### Player Controls
 
-- **Playback Speed Control**:
+- **Playback Speed Control**:  
   0.5x, 1.0x, 1.5x, 2.0x speed options with visual picker
-- **Skip Controls**:
+- **Skip Controls**:  
   Quick 10-second forward/backward navigation
-- **Progress Bar**:
+- **Progress Bar**:  
   Drag to seek with smooth seeking experience and loading indicator
-- **Auto-hiding Controls**:
+- **Auto-hiding Controls**:  
   Controls fade after 5 seconds of inactivity
 
 ## Requirements
@@ -30,17 +30,17 @@ A SwiftUI-based iOS video player application designed for language learning, fea
 
 ## Technical Implementation
 
-- **MVVM Architecture**:
+- **MVVM Architecture**:  
   Clean separation with ViewModels managing business logic
-- **SwiftUI + Combine**:
+- **SwiftUI + Combine**:  
   Reactive UI with declarative state management
-- **AVFoundation Integration**:
+- **AVFoundation Integration**:  
   Custom video player with precise playback control
-- **URLCache System**:
+- **URLCache System**:  
   Efficient image caching for smooth scrolling performance
-- **UserDefaults Persistence**:
+- **UserDefaults Persistence**:  
   Lightweight favorite state management
-- **Unit Testing**:
+- **Unit Testing**:  
   Unit tests covering playback controls and boundary conditions
-- **Dark Mode Support**:
+- **Dark Mode Support**:  
   Automatic theme adaptation
