@@ -44,15 +44,13 @@ struct VideoPlayerView: View {
         ZStack {
             if viewModel.isLoading {
                 loadingView
-            } else if let errorMessage = viewModel.errorMessage {
-                errorView(message: errorMessage)
+            } else if let player = viewModel.getPlayer() {
+                VideoPlayer(player: player)
+                    .disabled(true)
+                    .allowsHitTesting(false)
+                    .ignoresSafeArea()
             } else {
-                if let player = viewModel.getPlayer() {
-                    VideoPlayer(player: player)
-                        .disabled(true)
-                        .allowsHitTesting(false)
-                        .ignoresSafeArea()
-                }
+                errorView(message: viewModel.errorMessage ?? "Something went wrong...")
             }
             
             if viewModel.showControls {
