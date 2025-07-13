@@ -59,7 +59,7 @@ class MockDataProvider {
             description: "Quick cryptocurrency themed video",
             thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4")!,
-            duration: 30.0,
+            duration: 47.0,
             difficulty: .advanced
         ),
         
@@ -69,7 +69,7 @@ class MockDataProvider {
             description: "Short automotive review demo",
             thumbnailURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/WhatCarCanYouGetForAGrand.jpg")!,
             videoURL: URL(string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4")!,
-            duration: 30.0,
+            duration: 567.0,
             difficulty: .advanced
         )
     ]
